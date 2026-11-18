@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Credit Risk Checker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<main class="shell">
+  <header class="top">
+    <h1>Will this loan be repaid?</h1>
+    <p>Enter an applicant’s details. The model estimates the chance of default and compares it with its decision threshold.</p>
+    <div class="presets">
+      <span>Try an example</span>
+      <button type="button" data-preset="safe">Low risk</button>
+      <button type="button" data-preset="mid">Moderate</button>
+      <button type="button" data-preset="risky">High risk</button>
+    </div>
+  </header>
+
+  <div class="grid">
+    <form id="form" class="card" autocomplete="off">
+      <fieldset>
+        <legend>Applicant</legend>
+        <label>Age<input type="number" name="person_age" min="18" max="100" required></label>
+        <label>Annual income ($)<input type="number" name="person_income" min="1" required></label>
+        <label>Home ownership
+          <select name="person_home_ownership">
+            <option>RENT</option><option>OWN</option><option>MORTGAGE</option><option>OTHER</option>
+          </select></label>
+        <label>Years employed<input type="number" name="person_emp_length" min="0" max="60" step="0.5" required></label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Loan</legend>
+        <label>Purpose
+          <select name="loan_intent">
+            <option value="PERSONAL">Personal</option><option value="EDUCATION">Education</option>
+            <option value="MEDICAL">Medical</option><option value="VENTURE">Venture</option>
+            <option value="HOMEIMPROVEMENT">Home improvement</option><option value="DEBTCONSOLIDATION">Debt consolidation</option>
+          </select></label>
+        <label>Loan grade
+          <select name="loan_grade"><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option></select></label>
+        <label>Loan amount ($)<input type="number" name="loan_amnt" min="1" required></label>
+        <label>Interest rate (%)<input type="number" name="loan_int_rate" min="0" max="40" step="0.01" required></label>
+        <label class="wide">Loan as share of income
+          <div class="auto"><input type="text" name="loan_percent_income" readonly tabindex="-1" placeholder="Calculated from loan and income"></div></label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Credit history</legend>
+        <div class="seg-wrap">
+          <span id="seglabel">Past default on file</span>
+          <div class="seg" role="radiogroup" aria-labelledby="seglabel">
+            <input type="radio" name="cb_person_default_on_file" id="dN" value="N" checked><label for="dN">No</label>
+            <input type="radio" name="cb_person_default_on_file" id="dY" value="Y"><label for="dY">Yes</label>
+          </div>
+        </div>
+        <label>Credit history (years)<input type="number" name="cb_person_cred_hist_length" min="0" max="60" required></label>
+      </fieldset>
+
+      <button class="go" type="submit"><span class="t">Check default risk</span><span class="spin" aria-hidden="true"></span></button>
+      <p id="err" class="err" role="alert" hidden></p>
+    </form>
+
+    <aside class="card result" id="result" aria-live="polite">
+      <svg viewBox="0 0 220 130" class="gauge" aria-hidden="true">
+        <defs>
+          <linearGradient id="g" x1="0" x2="1">
+            <stop offset="0" stop-color="#16a085"/><stop offset=".55" stop-color="#f2b134"/><stop offset="1" stop-color="#e5484d"/>
+          </linearGradient>
+        </defs>
+        <path d="M20 110 A90 90 0 0 1 200 110" class="track"/>
+        <path d="M20 110 A90 90 0 0 1 200 110" class="fill" id="fill" pathLength="100"/>
+        <g id="tick" opacity="0"><line id="tickline" stroke-width="2.5"/><text id="ticktext" text-anchor="middle">threshold</text></g>
+      </svg>
+      <div class="num"><span id="pct">–</span><small id="pctsign" hidden>%</small></div>
+      <div class="verdict" id="verdict">Waiting for details</div>
+      <p class="note" id="note">Fill in the form or pick an example, then run the check. Your result appears here.</p>
+    </aside>
+  </div>
+  <footer>For learning and demonstration only. Do not use it for real lending decisions.</footer>
+</main>
+<script src="/script.js"></script>
+</body>
+</html>
